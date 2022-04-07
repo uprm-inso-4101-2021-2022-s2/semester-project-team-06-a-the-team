@@ -1,4 +1,4 @@
-Student('Kelvin', 'Gonzalez', 'kelvin.gonzalez11@upr.edu', 'password :D', '[<__main__.UniversityClass object at 0x033f6658>]')
-Student('Kelvin', 'Gonzalez', 'kelvin.gonzalez12@upr.edu', 'password :D', '[<__main__.UniversityClass object at 0x033f6658>]')
-Student('Kelvin', 'Gonzalez', 'kelvin.gonzalez13@upr.edu', 'password :D', '[<__main__.UniversityClass object at 0x033f6658>]')
-Student('Kelvin', 'Gonzalez', 'kelvin.gonzalez14@upr.edu', 'password :D', '[<__main__.UniversityClass object at 0x033f6658>]')
+{"name": "Kelvin", "lastname": "Gonzalez", "email": "kelvin.gonzalez11@upr.edu", "password": "password :D", "courses": ["INSO4101", "MATE4151"]}
+{"name": "Kelvin", "lastname": "Gonzalez", "email": "kelvin.gonzalez12@upr.edu", "password": "password :D", "courses": ["INSO4101"]}
+{"name": "Kelvin", "lastname": "Gonzalez", "email": "kelvin.gonzalez14@upr.edu", "password": "password :D", "courses": ["INSO4101"]}
+{"name": "Kelvin", "lastname": "Gonzalez", "email": "kelvin.gonzalez13@upr.edu", "password": "password :D", "courses": ["INSO4101"]}

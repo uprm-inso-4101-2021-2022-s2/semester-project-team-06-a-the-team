@@ -1,3 +1,4 @@
-UniversityClass('Intro to Software Engineering', 'INSO4101', '[[<__main__.Student object at 0x033f65c8>, True, 5, 0], [<__main__.Student object at 0x033f65f8>, False, 5, 0], [<__main__.Student object at 0x033f66d0>, False, 4.0, 1]]', '[[<__main__.Student object at 0x033f6700>, True]]')
-UniversityClass('Algorithms', 'CIIC4025', '[]', '[]')
-UniversityClass('Physics II', 'FISI3172', '[]', '[]')
+{"name": "Intro to Software Engineering", "identification": "INSO4101", "haveTaken": [["kelvin.gonzalez12@upr.edu", true, 5, 0], ["kelvin.gonzalez14@upr.edu", false, 5, 0], ["kelvin.gonzalez11@upr.edu", false, 4.0, 24]], "areTaking": [["kelvin.gonzalez13@upr.edu", true]]}
+{"name": "Algorithms", "identification": "CIIC4025", "haveTaken": [], "areTaking": []}
+{"name": "Physics II", "identification": "FISI3172", "haveTaken": [], "areTaking": []}
+{"name": "Linear Algebra and Differential Equations", "identification": "MATE4151", "haveTaken": [["kelvin.gonzalez11@upr.edu", true, 5, 0]], "areTaking": []}

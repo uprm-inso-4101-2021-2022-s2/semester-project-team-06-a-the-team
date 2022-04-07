@@ -1,7 +1,5 @@
 import enum
-import pymongo
-
-client = pymongo.MongoClient("mongodb+srv://DevUser:DevUserPasswordYes@tutormatchdb.o2owb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+import json
 
 
 universityClassesFile = "UniversityClasses.txt"
@@ -27,21 +25,18 @@ class UniversityClass:
         self.haveTaken = haveTaken
         self.areTaking = areTaking
 
-    def __str__(self):
-        return f"UniversityClass('{self.name}', '{self.identification}', '{self.haveTaken}', '{self.areTaking}')"
-
     def __eq__(self, other):
         return self.identification == other.identification
 
     def takenIndex(self, student):
         for i in range(len(self.haveTaken)):
-            if self.haveTaken[i][StudentSpec.Student] == student:
+            if self.haveTaken[i][StudentSpec.Student] == student.email:
                 return i
         return -1
 
     def takingIndex(self, student):
         for i in range(len(self.areTaking)):
-            if self.areTaking[i][StudentSpec.Student] == student:
+            if self.areTaking[i][StudentSpec.Student] == student.email:
                 return i
         return -1
 
@@ -55,17 +50,17 @@ class UniversityClass:
 
     def updateTutorStatus(self, tutor, status):
         for student in self.haveTaken:
-            if student[StudentSpec.Student] == tutor:
+            if student[StudentSpec.Student] == tutor.email:
                 student[StudentSpec.Status] = status
 
     def updateTutoreeStatus(self, tutoree, status):
         for student in self.haveTaken:
-            if student[StudentSpec.Student] == tutoree:
+            if student[StudentSpec.Student] == tutoree.email:
                 student[StudentSpec.Status] = status
 
     def rateTutor(self, tutor, rating):
         for student in self.haveTaken:
-            if student[StudentSpec.Student] == tutor:
+            if student[StudentSpec.Student] == tutor.email:
                 student[StudentSpec.Rating] = (student[StudentSpec.Rating] * student[StudentSpec.TotalRatings] + rating) / (student[StudentSpec.TotalRatings] + 1)
                 student[StudentSpec.TotalRatings] += 1
 
@@ -81,7 +76,7 @@ class UniversityClass:
 
     @staticmethod
     def fromDictionary(dict):
-        return Student(dict["name"], dict["identification"], dict["haveTaken"], dict["areTaking"])
+        return UniversityClass(dict["name"], dict["identification"], dict["haveTaken"], dict["areTaking"])
 
 
 class Student:
@@ -95,46 +90,64 @@ class Student:
         self.password = password
         self.courses = courses
 
-    def __str__(self):
-        return f"Student('{self.name}', '{self.lastname}', '{self.email}', '{self.password}', '{self.courses}')"
-
     def __eq__(self, other):
         return self.email == other.email
 
     def findMatches(self):
         matches = {}
         for course in self.courses:
-            if course.isTutoree(self):
-                matches[course.identification] = course.haveTaken
-                course.sortTutors()
+            if System.classes[course].isTutoree(self):
+                matches[course] = System.classes[course].haveTaken
+                System.classes[course].sortTutors()
         return matches
 
     def addClass(self, course, finished=False, help=True):
-        self.courses.append(course)
+        if course.identification in self.courses:
+            return
+
+        self.courses.append(course.identification)
         if finished:
-            course.haveTaken.append([self, help, 5, 0])
+            course.haveTaken.append([self.email, help, 5, 0])
         else:
-            course.areTaking.append([self, help])
+            course.areTaking.append([self.email, help])
 
     def updateClass(self, course, finished, help):
+        if course.identification not in self.courses:
+            return
+
         if finished:
             i = course.takingIndex(self)
             if i >= 0:
-                course.areTaking.pop()
+                course.areTaking.pop(i)
             j = course.takenIndex(self)
             if j >= 0:
                 course.haveTaken[j][StudentSpec.Status] = help
                 return
-            course.haveTaken.append([self, help, 5, 0])
+            course.haveTaken.append([self.email, help, 5, 0])
         else:
             i = course.takenIndex(self)
             if i >= 0:
-                course.haveTaken.pop()
+                course.haveTaken.pop(i)
             j = course.takingIndex(self)
             if j >= 0:
                 course.areTaking[j][StudentSpec.Status] = help
                 return
-            course.areTaking.append([self, help])
+            course.areTaking.append([self.email, help])
+
+    def removeClass(self, course):
+        if course.identification not in self.courses:
+            return
+
+        self.courses.remove(course.identification)
+
+        i = course.takingIndex(self)
+        if i >= 0:
+            course.areTaking.pop(i)
+            return
+
+        j = course.takenIndex(self)
+        if j >= 0:
+            course.haveTaken.pop(j)
 
     def toDictionary(self):
         return {"name": self.name, "lastname": self.lastname, "email": self.email, "password": self.password, "courses": self.courses}
@@ -152,11 +165,11 @@ class System:
     def initialize():
         with open(studentsFile, "r") as file:
             for line in file:
-                student = eval(line.strip())
+                student = Student.fromDictionary(json.loads(line.strip()))
                 System.students[student.email] = student
         with open(universityClassesFile, "r") as file:
             for line in file:
-                universityClass = eval(line.strip())
+                universityClass = UniversityClass.fromDictionary(json.loads(line.strip()))
                 System.classes[universityClass.identification] = universityClass
 
     @staticmethod
@@ -169,30 +182,53 @@ class System:
 
     @staticmethod
     def registerAccount(name, lastname, email, password):
+        if System.students.get(email) is not None:
+            return
+
         System.students[email] = Student(name, lastname, email, password)
         return System.students[email]
 
     @staticmethod
     def deleteAccount(email):
+        if System.students.get(email) is None:
+            return
+
+        for course in System.students[email].courses:
+            System.students[email].removeClass(System.classes[course])
         System.students.pop(email)
 
     @staticmethod
     def registerUniversityClass(name, codification):
+        if System.classes.get(codification) is not None:
+            return
+
         System.classes[codification] = UniversityClass(name, codification)
         return System.classes[codification]
+
+    @staticmethod
+    def deleteUniversityClass(codification):
+        if System.classes.get(codification) is None:
+            return
+
+        for student in System.classes[codification].areTaking:
+            System.students[student[StudentSpec.Student]].courses.remove(codification)
+
+        for student in System.classes[codification].haveTaken:
+            System.students[student[StudentSpec.Student]].courses.remove(codification)
+
+        System.classes.pop(codification)
 
     @staticmethod
     def save():
         with open(studentsFile, "w", newline="") as file:
             for student in System.students.values():
-                file.write(str(student) + "\n")
+                file.write(json.dumps(student.toDictionary()) + "\n")
         with open(universityClassesFile, "w", newline="") as file:
             for universityClass in System.classes.values():
-                file.write(str(universityClass) + "\n")
+                file.write(json.dumps(universityClass.toDictionary()) + "\n")
 
-database = client["TutorMatchDB"]
 
-#System.initialize()
+System.initialize()
 
 System.registerAccount("Kelvin", "Gonzalez", "kelvin.gonzalez11@upr.edu", "password :D")
 System.registerAccount("Kelvin", "Gonzalez", "kelvin.gonzalez12@upr.edu", "password :D")
@@ -201,6 +237,7 @@ System.registerAccount("Kelvin", "Gonzalez", "kelvin.gonzalez14@upr.edu", "passw
 System.registerUniversityClass("Intro to Software Engineering", "INSO4101")
 System.registerUniversityClass("Algorithms", "CIIC4025")
 System.registerUniversityClass("Physics II", "FISI3172")
+System.registerUniversityClass("Linear Algebra and Differential Equations", "MATE4151")
 
 user = System.logIn("kelvin.gonzalez11@upr.edu", "password :D")
 user.addClass(System.classes["INSO4101"], True)
@@ -219,6 +256,10 @@ print(student2.findMatches())
 user.updateClass(System.classes["INSO4101"], True, False)
 print(student2.findMatches())
 
-database["Students"].insert_one({"Student1": Student("Kelvin", "Gonzalez", "kelvin.gonzalez11@upr.edu", "password :D")})
+user.addClass(System.classes["MATE4151"], True)
+user.updateClass(System.classes["MATE4151"], True, True)
 
-#System.save()
+#System.deleteAccount("kelvin.gonzalez13@upr.edu")
+#System.deleteUniversityClass("MATE4151")
+
+System.save()
