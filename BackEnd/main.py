@@ -52,17 +52,23 @@ class UniversityClass:
         for student in self.haveTaken:
             if student[StudentSpec.Student] == tutor.email:
                 student[StudentSpec.Status] = status
+                return True
+        return False
 
     def updateTutoreeStatus(self, tutoree, status):
         for student in self.haveTaken:
             if student[StudentSpec.Student] == tutoree.email:
                 student[StudentSpec.Status] = status
+                return True
+        return False
 
     def rateTutor(self, tutor, rating):
         for student in self.haveTaken:
             if student[StudentSpec.Student] == tutor.email:
-                student[StudentSpec.Rating] = (student[StudentSpec.Rating] * student[StudentSpec.TotalRatings] + rating) / (student[StudentSpec.TotalRatings] + 1)
+                student[StudentSpec.Rating] = (student[StudentSpec.Rating] * student[StudentSpec.TotalRatings] + min(max(rating, 1), 5)) / (student[StudentSpec.TotalRatings] + 1)
                 student[StudentSpec.TotalRatings] += 1
+                return True
+        return False
 
     @staticmethod
     def sortingKey(e):
@@ -103,7 +109,7 @@ class Student:
 
     def addClass(self, course, finished=False, help=True):
         if course.identification in self.courses:
-            return
+            return False
 
         self.courses.append(course.identification)
         if finished:
@@ -111,9 +117,11 @@ class Student:
         else:
             course.areTaking.append([self.email, help])
 
+        return True
+
     def updateClass(self, course, finished, help):
         if course.identification not in self.courses:
-            return
+            return False
 
         if finished:
             i = course.takingIndex(self)
@@ -122,7 +130,7 @@ class Student:
             j = course.takenIndex(self)
             if j >= 0:
                 course.haveTaken[j][StudentSpec.Status] = help
-                return
+                return True
             course.haveTaken.append([self.email, help, 5, 0])
         else:
             i = course.takenIndex(self)
@@ -131,23 +139,27 @@ class Student:
             j = course.takingIndex(self)
             if j >= 0:
                 course.areTaking[j][StudentSpec.Status] = help
-                return
+                return True
             course.areTaking.append([self.email, help])
+
+        return True
 
     def removeClass(self, course):
         if course.identification not in self.courses:
-            return
+            return False
 
         self.courses.remove(course.identification)
 
         i = course.takingIndex(self)
         if i >= 0:
             course.areTaking.pop(i)
-            return
+            return True
 
         j = course.takenIndex(self)
         if j >= 0:
             course.haveTaken.pop(j)
+
+        return True
 
     def toDictionary(self):
         return {"name": self.name, "lastname": self.lastname, "email": self.email, "password": self.password, "courses": self.courses}
@@ -174,6 +186,9 @@ class System:
 
     @staticmethod
     def logIn(email, password):
+        if System.students.get(email) is None:
+            return None
+
         student = System.students.get(email)
         if System.students is not None:
             if student.password == password:
@@ -183,7 +198,7 @@ class System:
     @staticmethod
     def registerAccount(name, lastname, email, password):
         if System.students.get(email) is not None:
-            return
+            return None
 
         System.students[email] = Student(name, lastname, email, password)
         return System.students[email]
@@ -191,16 +206,17 @@ class System:
     @staticmethod
     def deleteAccount(email):
         if System.students.get(email) is None:
-            return
+            return False
 
         for course in System.students[email].courses:
             System.students[email].removeClass(System.classes[course])
         System.students.pop(email)
+        return True
 
     @staticmethod
     def registerUniversityClass(name, codification):
         if System.classes.get(codification) is not None:
-            return
+            return None
 
         System.classes[codification] = UniversityClass(name, codification)
         return System.classes[codification]
@@ -208,7 +224,7 @@ class System:
     @staticmethod
     def deleteUniversityClass(codification):
         if System.classes.get(codification) is None:
-            return
+            return False
 
         for student in System.classes[codification].areTaking:
             System.students[student[StudentSpec.Student]].courses.remove(codification)
@@ -217,6 +233,8 @@ class System:
             System.students[student[StudentSpec.Student]].courses.remove(codification)
 
         System.classes.pop(codification)
+
+        return True
 
     @staticmethod
     def save():
@@ -230,36 +248,54 @@ class System:
 
 System.initialize()
 
-System.registerAccount("Kelvin", "Gonzalez", "kelvin.gonzalez11@upr.edu", "password :D")
-System.registerAccount("Kelvin", "Gonzalez", "kelvin.gonzalez12@upr.edu", "password :D")
-System.registerAccount("Kelvin", "Gonzalez", "kelvin.gonzalez14@upr.edu", "password :D")
+user = None
 
-System.registerUniversityClass("Intro to Software Engineering", "INSO4101")
-System.registerUniversityClass("Algorithms", "CIIC4025")
-System.registerUniversityClass("Physics II", "FISI3172")
-System.registerUniversityClass("Linear Algebra and Differential Equations", "MATE4151")
-
-user = System.logIn("kelvin.gonzalez11@upr.edu", "password :D")
-user.addClass(System.classes["INSO4101"], True)
-System.students["kelvin.gonzalez12@upr.edu"].addClass(System.classes["INSO4101"], True)
-System.students["kelvin.gonzalez14@upr.edu"].addClass(System.classes["INSO4101"], True, False)
-
-print(System.classes["INSO4101"].haveTaken)
-
-System.classes["INSO4101"].rateTutor(user, 4)
-
-System.registerAccount("Kelvin", "Gonzalez", "kelvin.gonzalez13@upr.edu", "password :D")
-student2 = System.students["kelvin.gonzalez13@upr.edu"]
-student2.addClass(System.classes["INSO4101"], False)
-print(student2.findMatches())
-
-user.updateClass(System.classes["INSO4101"], True, False)
-print(student2.findMatches())
-
-user.addClass(System.classes["MATE4151"], True)
-user.updateClass(System.classes["MATE4151"], True, True)
-
-#System.deleteAccount("kelvin.gonzalez13@upr.edu")
-#System.deleteUniversityClass("MATE4151")
+while True:
+    try:
+        answer = input()
+        if answer == "register account":
+            print("Account already registered") if System.registerAccount(input("Enter name: "), input("Enter lastname: "), input("Enter email: "), input("Enter password: ")) is None else print("Account registered")
+        elif answer == "login":
+            user = System.logIn(input("Enter email: "), input("Enter password: "))
+            print("Invalid credentials") if user is None else print(f"Logged in as {user.name} {user.lastname}")
+        elif answer == "register class":
+            print("Class already registered") if System.registerUniversityClass(input("Enter name: "), input("Enter codification: ")) is None else print("Class registered")
+        elif answer == "delete account":
+            print("Account deleted") if System.deleteAccount(input("Enter email: ")) else print("Account does not exist")
+        elif answer == "delete class":
+            print("Class deleted") if System.deleteUniversityClass(input("Enter identification: ")) else print("Class does not exist")
+        elif answer == "rate tutor":
+            print("Tutor rated") if System.classes[input("Enter codification: ")].rateTutor(System.students[input("Enter tutor email: ")], int(input("Enter rating: "))) else print("Tutor not found")
+        elif answer == "find matches":
+            if user is None:
+                print("Not signed in")
+                continue
+            print(user.findMatches())
+        elif answer == "add class":
+            if user is None:
+                print("Not signed in")
+                continue
+            print("Class added") if user.addClass(System.classes[input("Enter identification: ")], True if input("Enter if finished (T/F): ") == "T" else False, True if input("Enter tutor/tutoree status (T/F): ") == "T" else False) else print("Class already added")
+        elif answer == "remove class":
+            if user is None:
+                print("Not signed in")
+                continue
+            print("Class removed") if user.removeClass(System.classes[input("Enter identification: ")]) else print("Class is not present")
+        elif answer == "update class":
+            if user is None:
+                print("Not signed in")
+                continue
+            print("Class updated") if user.updateClass(System.classes[input("Enter identification: ")], True if input("Enter if finished (T/F): ") == "T" else False, True if input("Enter tutor/tutoree status (T/F): ") == "T" else False) else print("Class is not present")
+        elif answer == "save":
+            System.save()
+            print("Data saved")
+        elif answer == "exit":
+            break
+        elif answer.strip() == "":
+            continue
+        else:
+            print("Invalid Command")
+    except:
+        print("An Error Occurred")
 
 System.save()
