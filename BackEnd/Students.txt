@@ -1,4 +1,3 @@
-{"name": "Kelvin", "lastname": "Gonzalez", "email": "kelvin.gonzalez11@upr.edu", "password": "password :D", "courses": ["INSO4101", "MATE4151"]}
-{"name": "Kelvin", "lastname": "Gonzalez", "email": "kelvin.gonzalez12@upr.edu", "password": "password :D", "courses": ["INSO4101"]}
-{"name": "Kelvin", "lastname": "Gonzalez", "email": "kelvin.gonzalez14@upr.edu", "password": "password :D", "courses": ["INSO4101"]}
-{"name": "Kelvin", "lastname": "Gonzalez", "email": "kelvin.gonzalez13@upr.edu", "password": "password :D", "courses": ["INSO4101"]}
+{"username": "KGlezC", "name": "Kelvin Gonzalez-Cortes", "email": "kelvin.gonzalez11@upr.edu", "password": "password :D", "department": "INSO", "description": "Second Year INSO Student :)", "style": "Individual", "courses": ["INSO4101", "FISI3172", "CIIC4020", "CIIC4025"]}
+{"username": "Caribikk", "name": "Caribik", "email": "crzydd3@gmail.com", "password": "password uwu", "department": "INSO", "description": null, "style": null, "courses": ["FISI3172", "INSO4101", "CIIC4025", "CIIC4020"]}
+{"username": "throwaway123", "name": "Dunno", "email": "throwaway123@gmail.com", "password": "12345", "department": null, "description": null, "style": null, "courses": ["INSO4101", "FISI3172", "CIIC4020"]}

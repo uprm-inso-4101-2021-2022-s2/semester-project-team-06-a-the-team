@@ -1,4 +1,4 @@
-{"name": "Intro to Software Engineering", "identification": "INSO4101", "haveTaken": [["kelvin.gonzalez12@upr.edu", true, 5, 0], ["kelvin.gonzalez14@upr.edu", false, 5, 0], ["kelvin.gonzalez11@upr.edu", false, 4.0, 24]], "areTaking": [["kelvin.gonzalez13@upr.edu", true]]}
-{"name": "Algorithms", "identification": "CIIC4025", "haveTaken": [], "areTaking": []}
-{"name": "Physics II", "identification": "FISI3172", "haveTaken": [], "areTaking": []}
-{"name": "Linear Algebra and Differential Equations", "identification": "MATE4151", "haveTaken": [["kelvin.gonzalez11@upr.edu", true, 5, 0]], "areTaking": []}
+{"name": "Algorithms", "identification": "CIIC4025", "haveTaken": [["KGlezC", false, 2.0, ["Caribikk"]]], "areTaking": [["Caribikk", true]]}
+{"name": "Intro to Software Engineering", "identification": "INSO4101", "haveTaken": [["throwaway123", true, 5, []], ["Caribikk", true, 3.0, ["KGlezC"]]], "areTaking": [["KGlezC", true]]}
+{"name": "Physics II", "identification": "FISI3172", "haveTaken": [["KGlezC", true, 5, ["Caribikk"]], ["throwaway123", false, 5, []]], "areTaking": [["Caribikk", true]]}
+{"name": "Data Structures", "identification": "CIIC4020", "haveTaken": [["KGlezC", true, 5, []], ["throwaway123", true, 5, []]], "areTaking": [["Caribikk", true]]}
