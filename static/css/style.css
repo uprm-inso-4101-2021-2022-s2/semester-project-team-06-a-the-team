@@ -1,0 +1,208 @@
+body {
+    background-color: #adb8c2;
+}
+
+/* @font-face {
+    font-family: MaryKate;
+    src: url("../fonts/MaryKate.ttf") format("truetype");
+} */ 
+.item-outer-container{
+    display: flex;
+    margin: 2.75rem 0.75rem 0 0.75rem;
+    border-radius: 0.25rem;
+    height: 13rem;
+    width: 22rem;
+    background-color:#183450;
+}
+.item-image{
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+.item-info-container{
+    margin: 0.75rem 0 0 0.75rem;
+    width: 100%;
+    padding-left: 00.125rem;
+}
+.item-name{
+    font-weight: bold;
+    font-size: large;
+    color: #e1eedd;
+}
+.item-price{
+    padding-bottom: 0.75rem;
+    margin-right: 0.75rem;
+    border-bottom-width: 1px;
+    border-color: #e1eedd;
+    color: #e1eedd;
+}
+.item-description{
+    display: flex;
+    margin-top: 0.75rem;
+}
+
+.blob{
+    position: absolute;
+    z-index: -1;
+    filter: blur(40px);
+}
+.header-button-container{
+    display: flex;
+    margin-right: 0.75rem;
+    padding: 0.125rem;
+    border-radius: 0.75rem;
+    height: 50%;
+    background-color: #f0a04b;
+}
+
+.header-button{
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding: 0 0.625rem;
+    border-radius: 0.75rem;
+    background-color:#305a85;
+    color: #f0a04b;
+}
+
+.buy-button-container{
+    margin-right: 0.75rem;
+    padding: 0.125rem;
+    border-radius: 0.75rem;
+    background-color: #e1eedd;
+
+}
+
+.buy-button{
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding: 0.5rem 1.5rem;
+    background-color:#f0a04b;
+    border-radius: 0.75rem;
+    color: rgba(24, 58, 29);
+    width: 100%;
+}
+
+.general-button-container{
+    margin-right: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding: 0.1rem;
+    border-radius: 0.75rem;
+    border:1px;
+    background-color: #e1eedd;
+}
+
+.general-button{
+    margin-bottom:  0.15rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    background-color:#f0a04b;
+    color: #305a85;
+}
+.general-button-container-pressed{
+    margin-right: 0.75rem;
+    margin-top: 0.3rem;
+    padding: 0.125rem;
+    border-radius: 0.75rem;
+    background-color:#305a85;
+}
+
+.general-button-pressed{
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    background-color: #e1eedd;
+    color:rgba(24, 58, 29, 0.7);
+
+}
+
+.tittle {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    color:#305a85;
+    font-weight: bolder;
+}
+
+.top-user-img-container {
+    display: block;
+    padding: 0.125rem;
+    margin-left: auto;
+    width: 3.5rem;
+    border-radius: 0.75rem;
+    margin-right: 1.5rem;
+    border-radius: 9999px;
+    background-color: #f0a04b;
+
+}
+.top-user {
+    border-radius: 9999px;
+    width: 3.5rem;
+}
+
+.user-img-container{
+    display: block;
+    padding: 0.125rem;
+    margin-left: auto;
+    border-radius: 9999px;
+    margin-right: 1.5rem;
+    height: 83%;
+    background-color: #f0a04b;
+    
+}
+
+.user-img {
+    border-radius: 9999px;
+    height: 100%;
+    background-color: #e1eedd;
+}
+
+.sign-in-button-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+.sign-up-button-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.user-credentials-label {
+
+    font-size: 2em;
+    padding-right: 1em;
+    color: #305a85;
+}
+
+.user-credentials-input {
+    border: solid 1px black;
+}
+
+.footer-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.links {
+    text-decoration: underline;
+    font-size: 1.3em;
+    color: #305a85;
+}
+
+.text-font-MaryKate {
+
+    font-size: 2.5em;
+}
+
+.footer-big-text {
+    color: black;
+    font-size: 3.5em;
+}
